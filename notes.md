@@ -44,3 +44,5 @@ app.use('/test', (req, res) => {
 -app.get("/admin/getAllData")
 -Order matters in app.use("/",(err, req, res, next)=>{})
 -Creating Schema ?
+Episode-07: Diving In to API
+-Passing Dynamic data: Fill the data from API during post call

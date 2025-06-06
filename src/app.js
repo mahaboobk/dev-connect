@@ -6,16 +6,10 @@ const User = require('./models/user'); // Import the User model
 // const bodyParser = require('body-parser');
 // app.use(bodyParser.json()); // Use body-parser middleware to parse JSON requests
 // POST API to create a new user
+app.use(express.json())
 app.post("/signup", async (req, res) => {
-    const userObject = {
-        firstName: "Mahaboob",
-        lastName: "Hussain",
-        emailId: "mahaboob.lotus@gmail.com",
-        password: "password123",
-        age: 36,
-        gender: "male"
-    }
-    const newUser = new User(userObject);
+    const newUser = new User(req.body);
+    console.log(newUser)
     await newUser.save()
         .then(() => {
             res.status(201).json({ message: "User created successfully" });
