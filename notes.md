@@ -46,3 +46,26 @@ app.use('/test', (req, res) => {
 -Creating Schema ?
 Episode-07: Diving In to API
 -Passing Dynamic data: Fill the data from API during post call
+-Write Feed API - GET /feed - get all Users from the database.
+# Data Sanitization
+- required, unique, default-When you dont pass any value, mangoose insert the default value
+- lowercase check for emailId
+- trim - remove the whitespaces
+- minLength, maxLength
+- validate function- only for new
+- to make validate for old - findByIdandUpdate
+- Check Validator function
+
+# Password Encrypt
+- Sign up is entry point, never trust req body. Validation of data is first thing.
+- Create a helper function to validate data
+- Use bcrypt to stroring the password safely. Import bcrypt and add password, salt data
+
+
+    
+
+
+
+# AWS set up
+- Set up AWS, Create AWS EC2 Instance
+- Create SSH and change the settings
