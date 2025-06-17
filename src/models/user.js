@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const JWT = require('jsonwebtoken')
+const bcrypt = require('bcryptjs'); // Import bcrypt for password hashing
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -60,5 +62,15 @@ const userSchema = new mongoose.Schema({
         default: "https://example.com/default-profile.png",
     }
 })
-
+userSchema.methods.getJWT = async function () {
+    const user = this;
+    const token = await JWT.sign({ _id: user._id }, "secret123");
+    return token;
+}
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password;
+    const isMatch = bcrypt.compare(passwordInputByUser, passwordHash);
+    return isMatch;
+}
 module.exports = mongoose.model('User', userSchema);

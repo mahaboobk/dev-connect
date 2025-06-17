@@ -78,6 +78,16 @@ Episode-07: Diving In to API
 - profile/  const cookies = req.cookies;  // Read the cookies, if user not - logged in it retruns empty object.
 # JWT Token
 - Encodes: Header + Payload + Signature - npm i jsonwebtoken
+- Create userAuth as middleware and use in API calls to validate login
+- JWT token created during login, and validate the user JWT.verify
+- returns the user with decoded token. 
+- expiry option in JWT token
+# Mongoose Schema
+- When signing up user, creating JWT token and passing _id, secretkey, expiry.
+- we can get this logic from userSchema
+- write helper method in userSchema. This is best practise.
+- write helper method to validatePassword and getJWT
+- use the helper methods in api calls.
 
     
 

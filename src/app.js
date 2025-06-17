@@ -8,6 +8,7 @@ const port = 3000;
 const User = require('./models/user'); // Import the User model
 const { validateSignupData } = require('./utils/validate'); // Import the validation function
 const cookieParser = require('cookie-parser');
+const { userAuth } = require('./middlewares/auth');
 // const bodyParser = require('body-parser');
 // app.use(bodyParser.json()); // Use body-parser middleware to parse JSON requests
 // POST API to create a new user
@@ -23,7 +24,8 @@ app.post("/signup", async (req, res) => {
     }
 
     const { firstName, lastName, emailId, password } = req.body;
-    const passwordHash = await bcrypt.hash(password.toString(), 1); // Hash the password
+    // const passwordHash = await bcrypt.hash(password.toString(), 1); // Hash the password
+    const passwordHash = await user.validatePassword(password)
     // Create a new user instance
     const newUser = new User({
         firstName: firstName,
@@ -109,9 +111,9 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Invalid credentials" });
         }
         // Generate a JWT token
-        const token = await JWT.sign({ _id: user._id }, "secretkey"); // Use a secret key and set an expiration time
+        const token = await user.getJWT() // Use a secret key and set an expiration time
         // Set the token in a cookie
-        res.cookie("token", token, { httpOnly: true, secure: true }); // Set a cookie with the JWT token
+        res.cookie("token", token); // Set a cookie with the JWT token
         console.log("User logged in successfully:", emailId);
         res.status(200).json({
             message: "Login successful", user: {
@@ -127,26 +129,21 @@ app.post("/login", async (req, res) => {
     }
 })
 // PROFILE
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
     try {
-        // Check if the user is authenticated           
-        const cookies = req.cookies; // Assuming you are using cookie-parser middleware
-        const token = cookies.token; // Get the token from cookies
-        if (!token) {
-            return res.status(401).json({ error: "Unauthorized access - No token provided" });
-        }
-        const decodedMessage = await JWT.verify(token, "secretkey"); // Verify the token
-        if (!decodedMessage) {
-            return res.status(401).json({ error: "Unauthorized access" });
-        }
-        console.log("Cookies:", cookies);
-        res.send("Profile Page - User is logged in" + `\nUser ID: ${decodedMessage._id}`);
+        // Check if the user is authenticated
+        const user = req.user;
+        res.send(user)
     } catch (error) {
         console.error("Profile access error:", error);
         res.status(500).json({ error: "Internal server error: " + error.message });
     }
 })
-
+// Dummy API
+app.post("/sendRequest", userAuth, async (req, res) => {
+    const user = req.user;
+    res.send(user.lastName + " Sends connection request")
+})
 // Connect to MongoDB and start the server  
 connectDB().then(() => {
     console.log("MongoDB connected successfully");
