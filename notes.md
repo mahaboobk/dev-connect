@@ -61,6 +61,23 @@ Episode-07: Diving In to API
 - Create a helper function to validate data
 - Use bcrypt to stroring the password safely. Import bcrypt and add password, salt data
 
+# Authentication
+- User makes API call. TCP/IP protocol
+- User should be logged in to make API requests. Server generates JWT token and sends to user.
+- USer stores JWT.
+- Every time the request made server validates JWT token.
+- Where user stores JWT tokens ? - Cookies
+# Cookies
+- Server sents JWT token in cookies.
+- Server wraps userName, password, jwt token in cookies.
+- When user receives jwt token stores the cookie in browser.
+- ANother API call, cookies will be validated by server.
+- The cookie will have the expiration time.
+- To read cookie we need cookie-parser
+- login/ res.cookie('userId', user._id, { httpOnly: true, secure: true });
+- profile/  const cookies = req.cookies;  // Read the cookies, if user not - logged in it retruns empty object.
+# JWT Token
+- Encodes: Header + Payload + Signature - npm i jsonwebtoken
 
     
 
